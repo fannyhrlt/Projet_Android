@@ -63,6 +63,7 @@ sealed class Screens(val route: String) {
     object Home : Screens("home")
     object Events : Screens("events")
     object History : Screens("history")
+    object Agenda : Screens("agenda")
 }
 
 
@@ -341,3 +342,48 @@ fun HistoryScreen() {
         }
     }
 }
+
+@Composable
+fun AgendaScreen(navController: NavHostController) {
+    val context = LocalContext.current
+    var courses by remember { mutableStateOf<List<Course>>(emptyList()) }
+    var events by remember { mutableStateOf<List<Event>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        // Charger les cours et événements (ajouter une source de données)
+        courses = listOf(
+            Course("Mathématiques", "2025-03-10", "08:30", "Salle 101"),
+            Course("Physique", "2025-03-11", "10:00", "Salle 102")
+        )
+        events = fakeEvents // Récupérer les événements existants
+        isLoading = false
+    }
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text(text = "Agenda", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            LazyColumn {
+                items(courses + events) { item ->
+                    Card(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                        Text(
+                            text = when (item) {
+                                is Course -> "${item.name} - ${item.date} à ${item.time}"
+                                is Event -> "${item.title} - ${item.date} à ${item.location}"
+                                else -> ""
+                            },
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+data class Course(val name: String, val date: String, val time: String, val location: String)
