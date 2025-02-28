@@ -12,10 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-import fr.isen.herault.smartcompanion.database.ChatDao
 
-val chatViewModel: ChatDao = TODO()
 
+
+
+import fr.isen.herault.smartcompanion.Screens
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(Screens.Home, Screens.Events, Screens.History)
@@ -49,14 +50,10 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 
 @Composable
-fun NavigationGraph(navController: NavHostController, modifier: Modifier, chatDao: ChatDao) {
+fun NavigationGraph(navController: NavHostController, modifier: Modifier) {
     NavHost(navController, startDestination = Screens.Home.route, modifier = modifier) {
-        composable(Screens.Home.route) { MainScreen(chatDao) }
+        composable(Screens.Home.route) { MainScreen() }
         composable(Screens.Events.route) { EventsScreen(navController) }
-        composable(Screens.History.route) { HistoryScreen(chatDao) }
-        composable("history") {
-            HistoryScreen(chatViewModel)
-        }
-
+        composable(Screens.History.route) { HistoryScreen() }
     }
 }

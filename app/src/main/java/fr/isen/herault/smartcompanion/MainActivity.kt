@@ -1,6 +1,8 @@
 package fr.isen.herault.isensmartcompanion
 
 
+
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,12 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 
 
-import
-fr.isen.herault.smartcompanion.ui.theme.ISENSmartCompanionTheme
+
+
+import fr.isen.herault.smartcompanion.ui.theme.ISENSmartCompanionTheme
+
+
 
 
 import fr.isen.herault.smartcompanion.NavigationGraph
 import fr.isen.herault.smartcompanion.BottomNavigationBar
+
+
 
 
 class MainActivity : ComponentActivity() {
@@ -28,11 +35,9 @@ class MainActivity : ComponentActivity() {
             ISENSmartCompanionTheme {
                 val navController = rememberNavController()
                 Scaffold(
-                    bottomBar = {
-                        BottomNavigationBar(navController) }
+                    bottomBar = { BottomNavigationBar(navController) }
                 ) { innerPadding ->
-                    NavigationGraph(navController,
-                        Modifier.padding(innerPadding))
+                    NavigationGraph(navController, Modifier.padding(innerPadding))
                 }
             }
         }

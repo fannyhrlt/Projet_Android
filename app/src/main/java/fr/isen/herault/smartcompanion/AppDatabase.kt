@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ChatMessage::class], version = 1, exportSchema = false)
+@Database(entities = [Interaction::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun chatDao(): ChatDao
+    abstract fun interactionDao(): InteractionDao
 
     companion object {
         @Volatile
@@ -18,7 +18,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "chat_database"
+                    "interaction_database"
                 ).build()
                 INSTANCE = instance
                 instance

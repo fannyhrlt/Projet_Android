@@ -4,10 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("kotlin-kapt")
-
-
-
-
 }
 
 
@@ -74,9 +70,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-
-
-
+    
     // ✅ Ajout de Material Icons Extended
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     implementation (libs.gson)
@@ -90,14 +84,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.google.ai.client.generativeai:generativeai:0.1.0")
-    implementation(libs.androidx.room.runtime)
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation(libs.androidx.room.ktx)
-
-
-
-
-
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -106,8 +95,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-}
-
-fun kapt(s: String) {
-
 }
