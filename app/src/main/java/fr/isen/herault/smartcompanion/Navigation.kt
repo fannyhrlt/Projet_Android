@@ -19,8 +19,10 @@ import androidx.navigation.compose.*
 import fr.isen.herault.smartcompanion.Screens
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    val items = listOf(Screens.Home, Screens.Events, Screens.History)
-    val icons = listOf(Icons.Filled.Home, Icons.Filled.CalendarToday, Icons.Filled.History)
+    val items = listOf(Screens.Home, Screens.Events,
+        Screens.History)
+    val icons = listOf(Icons.Filled.Home,
+        Icons.Filled.CalendarToday, Icons.Filled.History)
     val labels = listOf("Accueil", "Événements", "Historique")
 
 
@@ -34,7 +36,8 @@ fun BottomNavigationBar(navController: NavHostController) {
     NavigationBar {
         items.forEachIndexed { index, screen ->
             NavigationBarItem(
-                icon = { Icon(icons[index], contentDescription = labels[index]) },
+                icon = { Icon(icons[index], contentDescription =
+                labels[index]) },
                 label = { Text(labels[index]) },
                 selected = selectedItem == index,
                 onClick = {
@@ -50,10 +53,13 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 
 @Composable
-fun NavigationGraph(navController: NavHostController, modifier: Modifier) {
-    NavHost(navController, startDestination = Screens.Home.route, modifier = modifier) {
+fun NavigationGraph(navController: NavHostController, modifier:
+Modifier) {
+    NavHost(navController, startDestination = Screens.Home.route,
+        modifier = modifier) {
         composable(Screens.Home.route) { MainScreen() }
-        composable(Screens.Events.route) { EventsScreen(navController) }
+        composable(Screens.Events.route) {
+            EventsScreen(navController) }
         composable(Screens.History.route) { HistoryScreen() }
     }
 }

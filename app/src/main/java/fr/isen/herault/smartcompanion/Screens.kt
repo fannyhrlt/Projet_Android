@@ -79,11 +79,14 @@ fun MainScreen() {
 @Composable
 fun AssistantUI() {
     val context = LocalContext.current
-    val db = remember { AppDatabase.getDatabase(context).interactionDao() }
+    val db = remember {
+        AppDatabase.getDatabase(context).interactionDao() }
     var userInput by remember { mutableStateOf(TextFieldValue("")) }
-    val chatHistory = remember { mutableStateOf<List<Interaction>>(emptyList()) }
+    val chatHistory = remember {
+        mutableStateOf<List<Interaction>>(emptyList()) }
     val apiKey = context.getString(R.string.google_ai_api_key)
-    val generativeModel = GenerativeModel("gemini-1.5-flash", apiKey)
+    val generativeModel = GenerativeModel("gemini-1.5-flash",
+        apiKey)
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
@@ -94,7 +97,8 @@ fun AssistantUI() {
 
     fun saveInteraction(question: String, answer: String) {
         coroutineScope.launch {
-            val interaction = Interaction(question = question, answer = answer)
+            val interaction = Interaction(question = question,
+                answer = answer)
             db.insertInteraction(interaction)
             chatHistory.value = db.getAllInteractions()
         }
@@ -107,8 +111,10 @@ fun AssistantUI() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(60.dp))
-        Text(text = "ISEN", fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Color.Red)
-        Text(text = "Smart Companion", fontSize = 16.sp, color = Color.Gray)
+        Text(text = "ISEN", fontSize = 40.sp, fontWeight =
+        FontWeight.Bold, color = Color.Red)
+        Text(text = "Smart Companion", fontSize = 16.sp, color =
+        Color.Gray)
         Spacer(modifier = Modifier.height(20.dp))
 
         LazyColumn(
@@ -139,7 +145,8 @@ fun AssistantUI() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .background(Color.White, shape = MaterialTheme.shapes.medium),
+                .background(Color.White, shape =
+                MaterialTheme.shapes.medium),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
@@ -158,7 +165,8 @@ fun AssistantUI() {
                         userInput = TextFieldValue("")
 
                         coroutineScope.launch {
-                            val response = generativeModel.generateContent(question)
+                            val response =
+                                generativeModel.generateContent(question)
                             val answer = response.text ?: "Réponse non disponible."
                             saveInteraction(question, answer)
                         }
@@ -192,7 +200,8 @@ fun AssistantUI() {
 
 fun EventsScreen(navController: NavHostController) {
     val context = LocalContext.current
-    var events by remember { mutableStateOf<List<Event>>(emptyList()) }
+    var events by remember {
+        mutableStateOf<List<Event>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
 
@@ -200,8 +209,11 @@ fun EventsScreen(navController: NavHostController) {
 
 
     LaunchedEffect(Unit) {
-        RetrofitInstance.retrofitService.getEvents().enqueue(object : retrofit2.Callback<List<Event>> {
-            override fun onResponse(call: retrofit2.Call<List<Event>>, response: retrofit2.Response<List<Event>>) {
+        RetrofitInstance.retrofitService.getEvents().enqueue(object
+            : retrofit2.Callback<List<Event>> {
+            override fun onResponse(call:
+                                    retrofit2.Call<List<Event>>, response:
+                                    retrofit2.Response<List<Event>>) {
                 if (response.isSuccessful) {
                     events = response.body() ?: emptyList()
                     isLoading = false
@@ -214,7 +226,8 @@ fun EventsScreen(navController: NavHostController) {
 
 
 
-            override fun onFailure(call: retrofit2.Call<List<Event>>, t: Throwable) {
+            override fun onFailure(call:
+                                   retrofit2.Call<List<Event>>, t: Throwable) {
                 errorMessage = "Erreur : ${t.localizedMessage}"
                 isLoading = false
             }
@@ -225,7 +238,8 @@ fun EventsScreen(navController: NavHostController) {
 
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "Événements", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Événements", fontSize = 24.sp, fontWeight =
+        FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -236,7 +250,8 @@ fun EventsScreen(navController: NavHostController) {
                 CircularProgressIndicator()
             }
             errorMessage.isNotEmpty() -> {
-                Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+                Text(text = errorMessage, color =
+                MaterialTheme.colorScheme.error)
             }
             else -> {
                 LazyColumn {
@@ -247,11 +262,14 @@ fun EventsScreen(navController: NavHostController) {
                                 .padding(8.dp)
                                 .clickable {
                                     val gson = Gson()
-                                    val intent = Intent(context, EventDetailActivity::class.java)
-                                    intent.putExtra("event_json", gson.toJson(event))
+                                    val intent = Intent(context,
+                                        EventDetailActivity::class.java)
+                                    intent.putExtra("event_json",
+                                        gson.toJson(event))
                                     context.startActivity(intent)
                                 },
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
+                            colors =
+                            CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
                         ) {
                             Text(
                                 text = event.title,
@@ -277,9 +295,11 @@ fun EventsScreen(navController: NavHostController) {
 @Composable
 fun HistoryScreen() {
     val context = LocalContext.current
-    val db = remember { AppDatabase.getDatabase(context).interactionDao() }
+    val db = remember {
+        AppDatabase.getDatabase(context).interactionDao() }
     val coroutineScope = rememberCoroutineScope()
-    val chatHistory = remember { mutableStateOf<List<Interaction>>(emptyList()) }
+    val chatHistory = remember {
+        mutableStateOf<List<Interaction>>(emptyList()) }
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
@@ -312,7 +332,8 @@ fun HistoryScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .clickable { deleteInteraction(interaction.id) }
+                        .clickable {
+                            deleteInteraction(interaction.id) }
                 ) {
                     Text("${interaction.question} → ${interaction.answer}")
                 }
@@ -320,7 +341,3 @@ fun HistoryScreen() {
         }
     }
 }
-
-
-
-
