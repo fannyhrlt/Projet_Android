@@ -1,8 +1,5 @@
 package fr.isen.herault.smartcompanion
 
-
-
-
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
@@ -48,17 +45,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.google.ai.client.generativeai.GenerativeModel
-
-
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.semantics.Role.Companion.Button
 import kotlinx.coroutines.launch
-
-
 import fr.isen.herault.isensmartcompanion.R
-
-
-
 
 sealed class Screens(val route: String) {
     object Home : Screens("home")
@@ -66,17 +56,10 @@ sealed class Screens(val route: String) {
     object History : Screens("history")
     object Agenda : Screens("agenda")
 }
-
-
-
-
 @Composable
 fun MainScreen() {
     AssistantUI()
 }
-
-
-
 
 @Composable
 fun AssistantUI() {
@@ -90,7 +73,6 @@ fun AssistantUI() {
     val generativeModel = GenerativeModel("gemini-1.5-flash",
         apiKey)
     val coroutineScope = rememberCoroutineScope()
-
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             chatHistory.value = db.getAllInteractions()
@@ -136,7 +118,7 @@ fun AssistantUI() {
                     Text(
                         text = "Gemini : ${interaction.answer}",
                         fontSize = 16.sp,
-                        color = Color.Blue
+                        color = Color.Red
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -165,7 +147,6 @@ fun AssistantUI() {
                     if (userInput.text.isNotEmpty()) {
                         val question = userInput.text
                         userInput = TextFieldValue("")
-
                         coroutineScope.launch {
                             val response =
                                 generativeModel.generateContent(question)
@@ -188,28 +169,13 @@ fun AssistantUI() {
     }
 }
 
-
-
-
-
-
-
-
 @Composable
-
-
-
-
 fun EventsScreen(navController: NavHostController) {
     val context = LocalContext.current
     var events by remember {
         mutableStateOf<List<Event>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
-
-
-
-
     LaunchedEffect(Unit) {
         RetrofitInstance.retrofitService.getEvents().enqueue(object
             : retrofit2.Callback<List<Event>> {
@@ -224,10 +190,6 @@ fun EventsScreen(navController: NavHostController) {
                     isLoading = false
                 }
             }
-
-
-
-
             override fun onFailure(call:
                                    retrofit2.Call<List<Event>>, t: Throwable) {
                 errorMessage = "Erreur : ${t.localizedMessage}"
@@ -236,16 +198,10 @@ fun EventsScreen(navController: NavHostController) {
         })
     }
 
-
-
-
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = "Événements", fontSize = 24.sp, fontWeight =
         FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
-
-
-
 
         when {
             isLoading -> {
@@ -271,7 +227,7 @@ fun EventsScreen(navController: NavHostController) {
                                     context.startActivity(intent)
                                 },
                             colors =
-                            CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
+                            CardDefaults.cardColors(containerColor = Color(0xFFFF0000))
                         ) {
                             Text(
                                 text = event.title,
@@ -286,13 +242,6 @@ fun EventsScreen(navController: NavHostController) {
         }
     }
 }
-
-
-
-
-
-
-
 
 @Composable
 fun HistoryScreen() {
@@ -356,12 +305,11 @@ fun AgendaScreen(navController: NavHostController) {
         val agendaPrefs = context.getSharedPreferences("AgendaPrefs", Context.MODE_PRIVATE)
         val savedEvents = agendaPrefs.getStringSet("agenda_events", mutableSetOf()) ?: mutableSetOf()
         val loadedEvents = savedEvents.map { Gson().fromJson(it, Event::class.java) }
-
+        // Charger les cours et événements (ajouter une source de données)
         courses = listOf(
             Course("Mathématiques", "2025-03-10", "08:30", "Salle 101"),
             Course("Physique", "2025-03-11", "10:00", "Salle 102")
         )
-
         events = fakeEvents + loadedEvents // Ajoute les événements activés
         isLoading = false
     }
@@ -369,7 +317,6 @@ fun AgendaScreen(navController: NavHostController) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = "Agenda", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
-
         if (isLoading) {
             CircularProgressIndicator()
         } else {
