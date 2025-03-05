@@ -3,6 +3,7 @@ package fr.isen.herault.smartcompanion
 
 
 
+import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -352,12 +353,16 @@ fun AgendaScreen(navController: NavHostController) {
     var errorMessage by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        // Charger les cours et événements (ajouter une source de données)
+        val agendaPrefs = context.getSharedPreferences("AgendaPrefs", Context.MODE_PRIVATE)
+        val savedEvents = agendaPrefs.getStringSet("agenda_events", mutableSetOf()) ?: mutableSetOf()
+        val loadedEvents = savedEvents.map { Gson().fromJson(it, Event::class.java) }
+
         courses = listOf(
             Course("Mathématiques", "2025-03-10", "08:30", "Salle 101"),
             Course("Physique", "2025-03-11", "10:00", "Salle 102")
         )
-        events = fakeEvents // Récupérer les événements existants
+
+        events = fakeEvents + loadedEvents // Ajoute les événements activés
         isLoading = false
     }
 

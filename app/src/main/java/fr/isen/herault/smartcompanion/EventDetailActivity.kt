@@ -66,10 +66,23 @@ fun EventDetailScreen(event: Event?, context: Context, onBackPressed: () -> Unit
 
                 if (isNotificationEnabled) {
                     scheduleNotification(context, it)
+
+                    // Ajouter l'événement à l'agenda
+                    val agendaPrefs = context.getSharedPreferences("AgendaPrefs", Context.MODE_PRIVATE)
+                    val existingEvents = agendaPrefs.getStringSet("agenda_events", mutableSetOf()) ?: mutableSetOf()
+                    val updatedEvents = existingEvents.toMutableSet().apply { add(Gson().toJson(it)) }
+                    agendaPrefs.edit().putStringSet("agenda_events", updatedEvents).apply()
+                } else {
+                    // Supprimer l'événement de l'agenda si l'utilisateur désactive le rappel
+                    val agendaPrefs = context.getSharedPreferences("AgendaPrefs", Context.MODE_PRIVATE)
+                    val existingEvents = agendaPrefs.getStringSet("agenda_events", mutableSetOf()) ?: mutableSetOf()
+                    val updatedEvents = existingEvents.toMutableSet().apply { remove(Gson().toJson(it)) }
+                    agendaPrefs.edit().putStringSet("agenda_events", updatedEvents).apply()
                 }
             }) {
                 Text(if (isNotificationEnabled) "Annuler le rappel" else "Activer le rappel")
             }
+
         } ?: run {
             Text(text = "Aucun événement trouvé")
         }
